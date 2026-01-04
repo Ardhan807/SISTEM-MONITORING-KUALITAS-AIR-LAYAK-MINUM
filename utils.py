@@ -230,7 +230,7 @@ def check_device_status_by_timestamp(firebase_timestamp: str) -> dict:
     Check if device is online based on Firebase timestamp (universal untuk semua user)
     
     Args:
-        firebase_timestamp: Timestamp dari Firebase dalam format "HH:MM:SS"
+        firebase_timestamp: Timestamp dari Firebase dalam format "HH:MM:SS" (WIB timezone)
     
     Returns:
         dict: {
@@ -240,24 +240,28 @@ def check_device_status_by_timestamp(firebase_timestamp: str) -> dict:
         }
     
     LOGIKA:
-    - Bandingkan timestamp Firebase dengan waktu sekarang
+    - Bandingkan timestamp Firebase dengan waktu sekarang (keduanya dalam WIB)
     - Jika selisih > 15 detik → OFFLINE
     - Jika selisih <= 15 detik → ONLINE
     """
     try:
         from datetime import datetime, timedelta
+        import pytz
+        
+        # Timezone WIB (UTC+7)
+        wib = pytz.timezone('Asia/Jakarta')
+        
+        # Waktu sekarang dalam WIB
+        now_wib = datetime.now(wib)
         
         # Parse timestamp dari Firebase (format: "HH:MM:SS")
-        now = datetime.now()
-        
-        # Parse jam, menit, detik dari timestamp
         time_parts = firebase_timestamp.split(":")
         firebase_hour = int(time_parts[0])
         firebase_minute = int(time_parts[1])
         firebase_second = int(time_parts[2])
         
-        # Buat datetime object untuk timestamp Firebase (hari ini)
-        firebase_time = now.replace(
+        # Buat datetime object untuk timestamp Firebase (hari ini di WIB)
+        firebase_time_wib = now_wib.replace(
             hour=firebase_hour,
             minute=firebase_minute,
             second=firebase_second,
@@ -265,14 +269,25 @@ def check_device_status_by_timestamp(firebase_timestamp: str) -> dict:
         )
         
         # Hitung selisih waktu
-        time_diff = now - firebase_time
+        time_diff = now_wib - firebase_time_wib
         seconds_ago = int(time_diff.total_seconds())
         
-        # Handle kasus timestamp Firebase lebih besar (belum update hari ini)
+        # Handle kasus timestamp Firebase lebih besar (ESP32 masih kemarin)
         # Misal: sekarang 00:05, timestamp 23:59 (kemarin)
         if seconds_ago < 0:
             # Timestamp kemarin, pasti offline
             seconds_ago = 86400 + seconds_ago  # 24 jam + selisih negatif
+        
+        # Handle kasus timestamp terlalu jauh di masa lalu (>24 jam)
+        # Ini terjadi jika ESP32 sudah lama offline
+        if seconds_ago > 86400:
+            # Lebih dari 24 jam, normalize ke detik dalam hari ini
+            # Ini handle kasus timestamp "stuck" dari kemarin
+            return {
+                "is_online": False,
+                "message": f"Offline (>24 jam)",
+                "seconds_ago": seconds_ago
+            }
         
         # Tentukan status berdasarkan selisih waktu
         threshold = 15  # seconds

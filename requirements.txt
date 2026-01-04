@@ -22,6 +22,9 @@ joblib>=1.3.0
 # Auto Refresh for Real-time Monitoring
 streamlit-autorefresh>=0.0.1
 
+# Timezone handling
+pytz>=2023.3
+
 # ============================================================
 # Optional: For Development
 # ============================================================
