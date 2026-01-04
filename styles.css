@@ -1,0 +1,527 @@
+/* =====================================================
+   GLOBAL STYLES
+   ===================================================== */
+
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main {
+    padding: 1.5rem 2rem;
+    background: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    .main {
+        background: #1a1a1a;
+    }
+}
+
+/* =====================================================
+   HEADER STYLING
+   ===================================================== */
+
+h1 {
+    color: #000000;
+    text-align: center;
+    padding: 15px 0 5px 0;
+    font-size: 2.8em;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 5px;
+}
+
+@media (prefers-color-scheme: dark) {
+    h1 {
+        color: #ffffff;
+    }
+}
+
+h2 {
+    color: #1a1a1a;
+    border-left: 3px solid #000000;
+    padding-left: 12px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    h2 {
+        color: #ffffff;
+        border-left-color: #ffffff;
+    }
+}
+
+h3 {
+    color: #1a1a1a;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    h3 {
+        color: #ffffff;
+    }
+}
+
+h4 {
+    color: #2a2a2a;
+    font-weight: 600;
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+    h4 {
+        color: #e0e0e0;
+    }
+}
+
+/* =====================================================
+   METRIC CARDS
+   ===================================================== */
+
+.stMetric {
+    background: #f8f8f8;
+    padding: 20px 12px !important;
+    border-radius: 0px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #d0d0d0;
+    transition: all 0.3s ease;
+    min-height: 120px !important;
+    height: 120px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+.stMetric:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    border-color: #808080;
+}
+
+@media (prefers-color-scheme: dark) {
+    .stMetric {
+        background: #2a2a2a;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        border: 1px solid #404040;
+    }
+    
+    .stMetric:hover {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        border-color: #606060;
+    }
+}
+
+[data-testid="metric-container"] {
+    height: 120px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+[data-testid="stMetric"] {
+    height: 120px !important;
+}
+
+div[data-testid="stMetricValue"] {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+}
+
+div[data-testid="stMetricLabel"] {
+    font-size: 0.95rem !important;
+    margin-bottom: 8px !important;
+}
+
+div[data-testid="stMetricDelta"] {
+    font-size: 0.85rem !important;
+}
+
+/* =====================================================
+   INFO/ALERT BOXES
+   ===================================================== */
+
+.info-box {
+    background: #f0f0f0;
+    border-left: 3px solid #000000;
+    border-radius: 0px;
+    padding: 12px;
+    color: #1a1a1a;
+    font-size: 0.95em;
+}
+
+@media (prefers-color-scheme: dark) {
+    .info-box {
+        background: #2a2a2a;
+        border-left-color: #ffffff;
+        color: #e0e0e0;
+    }
+}
+
+.info-panel {
+    background: #f8f8f8;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .info-panel {
+        background: #2a2a2a;
+        border-color: #404040;
+    }
+}
+
+.info-panel h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.info-panel p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.stAlert {
+    border-radius: 0px;
+    padding: 10px 12px;
+    margin: 10px 0;
+    border-left: 3px solid;
+    font-size: 0.95em;
+}
+
+/* =====================================================
+   STATUS CARDS
+   ===================================================== */
+
+.equal-height-wrapper {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.confidence-box {
+    flex: 0.53;
+    background: #f8f8f8;
+    border: 2px solid #d0d0d0;
+    border-radius: 0px;
+    padding: 20px;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (prefers-color-scheme: dark) {
+    .confidence-box {
+        background: #2a2a2a;
+        border-color: #404040;
+    }
+}
+
+.status-box {
+    flex: 2;
+    border-radius: 0px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    letter-spacing: 0.5px;
+    border: 2px solid;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.status-box:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.status-safe-full {
+    background: #ffffff;
+    color: #059669;
+    border-color: #10b981;
+}
+
+@media (prefers-color-scheme: dark) {
+    .status-safe-full {
+        background: #064e3b;
+        color: #a7f3d0;
+        border-color: #10b981;
+    }
+}
+
+.status-moderate-full {
+    background: #cccccc;
+    color: #000000;
+    border-color: #333333;
+}
+
+@media (prefers-color-scheme: dark) {
+    .status-moderate-full {
+        background: #78350f;
+        color: #fcd34d;
+        border-color: #f59e0b;
+    }
+}
+
+.status-unsafe-full {
+    background: #333333;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+    .status-unsafe-full {
+        background: #7f1d1d;
+        color: #fecaca;
+        border-color: #dc2626;
+    }
+}
+
+.confidence-label-inline {
+    font-size: 14px;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .confidence-label-inline {
+        color: #999;
+    }
+}
+
+.confidence-value-inline {
+    font-size: 48px;
+    font-weight: 700;
+    color: #000;
+    margin: 10px 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .confidence-value-inline {
+        color: #fff;
+    }
+}
+
+.confidence-bar-inline {
+    width: 100%;
+    height: 12px;
+    background: #e0e0e0;
+    border-radius: 0px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .confidence-bar-inline {
+        background: #404040;
+    }
+}
+
+.confidence-fill-inline {
+    height: 100%;
+    background: linear-gradient(90deg, #333 0%, #000 100%);
+    transition: width 0.5s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+    .confidence-fill-inline {
+        background: linear-gradient(90deg, #fff 0%, #ccc 100%);
+    }
+}
+
+/* =====================================================
+   DECISION CARD
+   ===================================================== */
+
+.decision-card {
+    background-color: #e0e0e0;
+    color: #1a1a1a;
+    border: 2px solid #a0a0a0;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 10px 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .decision-card {
+        background-color: #2a2a2a;
+        color: #f0f0f0;
+        border: 2px solid #555555;
+    }
+}
+
+.decision-card ul {
+    padding-left: 18px;
+    margin-top: 5px;
+}
+
+/* =====================================================
+   PIPELINE SECTION
+   ===================================================== */
+
+.pipeline-step {
+    background: #f5f5f5;
+    border: 2px solid #333333;
+    border-radius: 0px;
+    padding: 15px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    color: #1a1a1a;
+    min-height: 85px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pipeline-step.pipeline-active {
+    background: #ffffff;
+    border-color: #000000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    color: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+    .pipeline-step {
+        background: #1f1f1f;
+        border-color: #505050;
+        color: #e0e0e0;
+    }
+    
+    .pipeline-step.pipeline-active {
+        background: #2a2a2a;
+        border-color: #ffffff;
+        color: #ffffff;
+    }
+}
+
+/* =====================================================
+   DEVICE STATUS
+   ===================================================== */
+
+@keyframes pulse-device {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+    50% { 
+        opacity: 0.6; 
+        transform: scale(1.2); 
+    }
+}
+
+/* =====================================================
+   EXPANDABLE SECTIONS
+   ===================================================== */
+
+.streamlit-expanderHeader {
+    background: #f0f0f0;
+    border-radius: 0px;
+    padding: 10px 12px;
+    border: 1px solid #d0d0d0;
+    transition: all 0.2s ease;
+}
+
+.streamlit-expanderHeader:hover {
+    background: #e5e5e5;
+    border-color: #808080;
+}
+
+@media (prefers-color-scheme: dark) {
+    .streamlit-expanderHeader {
+        background: #252525;
+        border-color: #404040;
+    }
+    
+    .streamlit-expanderHeader:hover {
+        background: #2a2a2a;
+        border-color: #606060;
+    }
+}
+
+/* =====================================================
+   DIVIDERS & SPACING
+   ===================================================== */
+
+hr {
+    margin: 20px 0;
+    opacity: 0.5;
+    height: 1px;
+    background: #808080;
+}
+
+/* =====================================================
+   TABS
+   ===================================================== */
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: 10px;
+    background: transparent;
+}
+
+.stTabs [data-baseweb="tab"] {
+    padding: 8px 16px;
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    border-radius: 0px;
+    transition: all 0.2s ease;
+}
+
+.stTabs [aria-selected="true"] {
+    background: #000000;
+    border-color: #000000;
+    color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    .stTabs [data-baseweb="tab"] {
+        background: #1f1f1f;
+        border-color: #404040;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+    }
+}
+
+/* =====================================================
+   DATAFRAME
+   ===================================================== */
+
+.stDataframe {
+    border-radius: 0px;
+    overflow: hidden;
+}
+
+/* =====================================================
+   GENERAL ELEMENTS
+   ===================================================== */
+
+.stColumns {
+    gap: 15px;
+}
+
+[data-testid="stBlock"] {
+    margin-bottom: 8px;
+}
