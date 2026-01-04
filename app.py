@@ -17,6 +17,7 @@ from utils import (
     upload_status_to_firebase,
     save_to_history,
     check_device_status,
+    check_device_status_by_timestamp,
     load_css
 )
 from ui_components import (
@@ -165,18 +166,22 @@ def main():
             # Create a data signature from sensor values
             current_data_signature = f"{ph:.2f}|{tds:.1f}|{ntu:.2f}"
             
-            # Check if data has changed
+            # Check if data has changed (untuk tracking history)
             if st.session_state.last_timestamp is None:
+                # Pertama kali masuk - simpan signature
                 st.session_state.last_timestamp = current_data_signature
                 st.session_state.no_update_count = 0
             elif current_data_signature == st.session_state.last_timestamp:
+                # Data tidak berubah - increment counter
                 st.session_state.no_update_count += 1
             else:
+                # Data berubah - reset counter dan set flag bahwa sudah terima data baru
                 st.session_state.last_timestamp = current_data_signature
                 st.session_state.no_update_count = 0
+                st.session_state.first_data_received = True
             
-            # Check device status
-            device_status = check_device_status(st.session_state.no_update_count)
+            # Check device status BERDASARKAN TIMESTAMP FIREBASE (universal untuk semua user)
+            device_status = check_device_status_by_timestamp(timestamp)
             is_online = device_status["is_online"]
             status_message = device_status["message"]
             
@@ -191,7 +196,8 @@ def main():
             
             # Show warning if offline
             if not is_online:
-                st.warning(f"⚠️ **ESP32 tidak mengirim data baru ke Firebase.** Data terakhir diterima {st.session_state.no_update_count * 3} detik yang lalu. Pastikan ESP32 terhubung ke WiFi dan Firebase.")
+                seconds_ago = device_status.get("seconds_ago", 0)
+                st.warning(f"⚠️ **ESP32 tidak mengirim data baru ke Firebase.** Data terakhir diterima {seconds_ago} detik yang lalu. Pastikan ESP32 terhubung ke WiFi dan Firebase.")
             
             # 2. CHARTS & TRENDS
             st.markdown("### Tren Historis")

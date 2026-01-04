@@ -28,6 +28,8 @@ def initialize_session_state():
         st.session_state.no_update_count = 0
     if "last_saved_signature" not in st.session_state:
         st.session_state.last_saved_signature = None
+    if "first_data_received" not in st.session_state:
+        st.session_state.first_data_received = False  # Flag untuk tracking apakah sudah pernah terima data baru
 
 
 def load_firebase_config():
@@ -223,12 +225,103 @@ def save_to_history(ph: float, tds: float, ntu: float, status: str, timestamp: s
         # Don't show error to user, just log it
 
 
-def check_device_status(no_update_count) -> dict:
-    """Check if device is online based on whether sensor data is updating"""
-    # If sensor data hasn't changed for 5 consecutive checks (15 seconds)
-    # then ESP32 is not sending new data
+def check_device_status_by_timestamp(firebase_timestamp: str) -> dict:
+    """
+    Check if device is online based on Firebase timestamp (universal untuk semua user)
+    
+    Args:
+        firebase_timestamp: Timestamp dari Firebase dalam format "HH:MM:SS"
+    
+    Returns:
+        dict: {
+            "is_online": bool,
+            "message": str,
+            "seconds_ago": int
+        }
+    
+    LOGIKA:
+    - Bandingkan timestamp Firebase dengan waktu sekarang
+    - Jika selisih > 15 detik → OFFLINE
+    - Jika selisih <= 15 detik → ONLINE
+    """
+    try:
+        from datetime import datetime, timedelta
+        
+        # Parse timestamp dari Firebase (format: "HH:MM:SS")
+        now = datetime.now()
+        
+        # Parse jam, menit, detik dari timestamp
+        time_parts = firebase_timestamp.split(":")
+        firebase_hour = int(time_parts[0])
+        firebase_minute = int(time_parts[1])
+        firebase_second = int(time_parts[2])
+        
+        # Buat datetime object untuk timestamp Firebase (hari ini)
+        firebase_time = now.replace(
+            hour=firebase_hour,
+            minute=firebase_minute,
+            second=firebase_second,
+            microsecond=0
+        )
+        
+        # Hitung selisih waktu
+        time_diff = now - firebase_time
+        seconds_ago = int(time_diff.total_seconds())
+        
+        # Handle kasus timestamp Firebase lebih besar (belum update hari ini)
+        # Misal: sekarang 00:05, timestamp 23:59 (kemarin)
+        if seconds_ago < 0:
+            # Timestamp kemarin, pasti offline
+            seconds_ago = 86400 + seconds_ago  # 24 jam + selisih negatif
+        
+        # Tentukan status berdasarkan selisih waktu
+        threshold = 15  # seconds
+        
+        if seconds_ago <= threshold:
+            return {
+                "is_online": True,
+                "message": f"Online ({seconds_ago}s yang lalu)",
+                "seconds_ago": seconds_ago
+            }
+        else:
+            return {
+                "is_online": False,
+                "message": f"Offline ({seconds_ago}s yang lalu)",
+                "seconds_ago": seconds_ago
+            }
+    
+    except Exception as e:
+        # Jika error parsing, anggap offline
+        return {
+            "is_online": False,
+            "message": f"Error parsing timestamp: {str(e)}",
+            "seconds_ago": 999
+        }
+
+
+def check_device_status(no_update_count, first_data_received) -> dict:
+    """
+    Check if device is online based on whether sensor data is updating
+    
+    LOGIKA:
+    1. Jika belum pernah terima data baru (first_data_received = False) → OFFLINE
+    2. Jika sudah pernah terima data baru:
+       - no_update_count < 5 → ONLINE
+       - no_update_count >= 5 (15 detik) → OFFLINE
+    
+    CATATAN: Fungsi ini untuk backward compatibility.
+    Gunakan check_device_status_by_timestamp() untuk status yang lebih akurat.
+    """
     max_no_update_checks = 5  # 5 checks x 3 seconds = 15 seconds
     
+    # Jika belum pernah terima data baru sejak aplikasi dibuka
+    if not first_data_received:
+        return {
+            "is_online": False,
+            "message": "Menunggu data pertama..."
+        }
+    
+    # Jika sudah pernah terima data, cek apakah masih update
     if no_update_count >= max_no_update_checks:
         return {
             "is_online": False,
